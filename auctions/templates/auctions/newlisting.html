@@ -1,0 +1,52 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div class="container py-4">
+    <form style="width: min(640px, 90%);" class="mx-auto row g-3 p-3 border rounded" action="{% url 'newlisting' %}"
+        method="post">
+        <h1 class="text-accent m-0 text-center">New Listing</h1>
+        {% if messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h5><i class="bi bi-exclamation-triangle"></i> Invalid Data</h5>
+                <ul class="m-0">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="col-md-12">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" maxlength="150" name="title" class="form-control" id="title"
+                placeholder="Eg: Acer Laptop" value="{{ data.title }}" required>
+        </div>
+        <div class="col-md-6">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" min="1" pattern="[0-9]" name="price" class="form-control" id="price" placeholder="Eg: 150" value="{{ data.price }}" required>
+        </div>
+        <div class="col-md-6">
+            <label for="category" class="form-label">Category</label>
+            <select id="category" name="category" value="{{ data.category }}" class="form-select">
+                <option value="">Choose category</option>
+                {% for category in categories %}
+                    <option value="{{ category.pk }}">{{ category.name | title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-12">
+            <label for="image" class="form-label">Image Link</label>
+            <input type="url" name="image" class="form-control" id="image"
+                placeholder="Eg: http://www.example.com/acer-laptop.jpg" value="{{ data.image }}" required>
+        </div>
+        <div class="col-md-12">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" name="description" id="description" rows="3" required>{{ data.description }}</textarea>
+        </div>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-accent w-100">Create Listing</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

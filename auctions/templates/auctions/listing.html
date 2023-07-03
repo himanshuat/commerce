@@ -1,0 +1,107 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container-lg">
+    <div class="row">
+
+        <img style="height: min(500px, 80vh)" src="{{ listing.image }}" class="col-lg-6 col-md-12 object-fit-contain"
+            alt="{{ listing.title }}">
+
+        <div class="col-lg-6 col-md-12">
+            <span class="badge text-bg-secondary">{{ listing.category | upper }}</span>
+            <h2 class="text-accent-light mt-2">{{ listing.title }}</h2>
+            <p><strong class="fs-1"><span class="text-accent">$</span>{{ listing.price }}</strong></p>
+            <div class="d-flex gap-4">
+                <p><strong>Owner:</strong> <span class="text-info-emphasis">{{ listing.creator }}</span></p>
+                <p>
+                    <strong>Latest Bid:</strong>
+                    {% if latest_bid %}
+                    <span class="text-info-emphasis">{{ latest_bid.bidder }}</span>
+                    {% else %}
+                    <span class="text-info-emphasis">No bids yet</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if listing.winner %}
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-info"><i class="bi bi-check2-circle"></i> SOLD!</h4>
+                <hr>
+                <p class="mb-0">
+                    Sold to <strong>{{ listing.winner }}</strong> for ${{ listing.price }} in the auction involving
+                    <strong>{{ bidscount }} bids.</strong>
+                </p>
+            </div>
+            {% else %}
+            {% if creator %}
+            <form class="d-block my-4" action="{% url 'close_auction' listing.pk %}" method="post">
+                {% csrf_token %}
+                {% if latest_bid %}
+                <button type="submit" class="btn btn-accent w-100">Close Auction</button>
+                {% else %}
+                <button type="submit" class="btn btn-accent w-100" disabled>Close Auction</button>
+                {% endif %}
+            </form>
+            {% else %}
+            <form class="row my-4" action="{% url 'bid' listing.pk %}" method="post">
+                {% csrf_token %}
+                <div class="col-7">
+                    <input type="number" min="{{ listing.price|add:'1'}}" pattern="[0-9]" name="value"
+                        class="form-control" placeholder="Bid amount" aria-label="Bid amount">
+                </div>
+                <div class="col-5">
+                    {% if latest_bid.bidder == user %}
+                    <button type="submit" class="btn btn-accent w-100" disabled>Place Bid</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-accent w-100">Place Bid</button>
+                    {% endif %}
+                </div>
+            </form>
+            {% endif %}
+            {% endif %}
+
+            <form class="d-block my-4" action="{% url 'update_watchlist' listing.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-accent w-100">{{ watchlist_text }}</button>
+            </form>
+        </div>
+
+        <div class="col-12 mt-4">
+            <p class="text-accent-light mb-2 fw-bold">Description</p>
+            <p class=" text-secondary">{{ listing.description }}</p>
+        </div>
+
+        <hr>
+
+        <div class="col-12 my-3">
+            <form action="{% url 'comment' listing.pk %}" method="post">
+                {% csrf_token %}
+                <h3 class="text-accent-light">New comment</h3>
+                <div class="form-floating">
+                    <textarea maxlength="120" name="content" class="form-control" placeholder="Leave a comment here"
+                        id="comment" style="height: 100px"></textarea>
+                    <label for="comment">Leave a comment here</label>
+                </div>
+                <button type="submit" class="btn btn-accent w-100 mt-3">Post Comment</button>
+            </form>
+        </div>
+
+        <div class="col-12 my-3">
+            <h3 class="text-accent-light">Comments</h3>
+            <ul class="list-group rounded-0">
+                {% for comment in comments %}
+                <li class="list-group-item">
+                    <p class="mb-1">
+                        <strong class="text-accent-light fs-5">{{ comment.user }}</strong>
+                        <small class="m-2">{{ comment.date }}</small>
+                    </p>
+                    <p class="mb-1">{{ comment.content }}</p>
+                </li>
+                {% empty %}
+                <p class="lead">No comments yet</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

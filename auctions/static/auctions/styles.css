@@ -1,0 +1,97 @@
+:root {
+    --accent: #9B4584;
+    --accent-light: #55354C;
+}
+
+/* Utilities */
+
+a {
+    text-decoration: none;
+}
+
+small {
+    font-size: .75rem;
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+.text-accent-light {
+    color: var(--accent-light);
+}
+
+.btn-accent {
+    color: #FFF;
+    background-color: var(--accent);
+}
+
+.btn-accent:hover {
+    color: #FFF;
+    background-color: var(--accent-light);
+}
+
+.btn-outline-accent {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.btn-outline-accent:hover {
+    color: #FFF;
+    background-color: var(--accent-light);
+}
+
+/* Main */
+
+.nav-link {
+    color: var(--accent-light);
+}
+
+.card {
+    transition: all .15s ease-in;
+}
+
+.card:hover {
+    box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .15);
+}
+
+.card-img-top {
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+}
+
+.card-category {
+    overflow: hidden;
+}
+
+.card-category>.card-img-top {
+    padding: 0;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    transition: all .15s ease-in;
+}
+
+.card-category:hover>.card-img-top {
+    transform: scale(1.15);
+}
+
+.card-category .card-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .25);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sold-badge {
+    padding: .125rem .5rem;
+    color: #FFF;
+    background-color: var(--accent);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    letter-spacing: 1px;
+}
